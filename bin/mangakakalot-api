@@ -1,50 +1,22 @@
 #!/usr/bin/env node
 
-const path = require('path');
-const express = require('express');
-const cors = require('cors');
+/**
+ * CLI tool to start the MangaKakalot API server
+ * This creates and starts an Express server using the library
+ */
 
-// Import the main app
-const app = express();
+const mangakakalotApi = require('../index');
+
+console.log('🚀 Starting MangaKakalot API server...');
+console.log(`📦 Package: mangakakalot-api v${mangakakalotApi.version}`);
+console.log('🌐 For API documentation, visit: https://github.com/shafat-96/mangakakalot-api\n');
+
+// Create Express server using the library
+const app = mangakakalotApi.createServer();
 const PORT = process.env.PORT || 3000;
 
-// Import routes
-const mangaKakalotRoutes = require('../routes/mangakakalotroutes');
-
-// Middleware
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.use(express.json());
-
-// Health check endpoint
-app.get('/', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    message: 'MangaKakalot API is running',
-    version: require('../package.json').version
-  });
-});
-
-// Routes
-app.use('/api/manga', mangaKakalotRoutes);
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
-
-// Start server
-app.listen(PORT, () => {
+// Start the server
+const server = app.listen(PORT, () => {
   console.log(`🚀 MangaKakalot API is running on port ${PORT}`);
   console.log(`📖 Available endpoints:`);
   console.log(`   GET /api/manga/search/:query?/:page?`);
@@ -57,4 +29,21 @@ app.listen(PORT, () => {
   console.log(`   GET /api/manga/popular-now`);
   console.log(`   GET /api/manga/home`);
   console.log(`🌐 Visit: http://localhost:${PORT}`);
+});
+
+// Handle graceful shutdown
+process.on('SIGINT', () => {
+  console.log('\n🛑 Shutting down MangaKakalot API server...');
+  server.close(() => {
+    console.log('✅ Server stopped gracefully');
+    process.exit(0);
+  });
+});
+
+process.on('SIGTERM', () => {
+  console.log('\n🛑 Shutting down MangaKakalot API server...');
+  server.close(() => {
+    console.log('✅ Server stopped gracefully');
+    process.exit(0);
+  });
 });

@@ -1,43 +1,33 @@
-const express = require("express");
-const cors = require("cors");
-const mangaKakalotRoutes = require("./routes/mangakakalotroutes");
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const {
+  scrapeChapterImages,
+  scrapeMangaDetails,
+  scrapeMangaSearch,
+  scrapePopularMangas,
+  scrapeLatestMangas,
+  scrapeNewestMangas,
+  scrapeCompletedMangas,
+  scrapePopularNowMangas,
+  scrapeHomePage,
+} = require('./scrappers/mangakakalot');
 
-// Middleware
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+const core = require('./scrappers/mangakakalot');
+const svc  = require('./src');
 
-app.use(express.json());
+module.exports = {
+  ...svc,
 
-// Health check endpoint
-app.get("/", (req, res) => {
-  res.json({ status: "ok", message: "MangaKakalot API is running" });
-});
+  ...core,
 
-// Routes
-app.use("/api/manga", mangaKakalotRoutes);
+  search: svc.search.search,
+  getDetails: svc.details.getDetails,
+  getChapterImages: svc.chapter.getChapterImages,
+  getPopular: svc.lists.getPopular,
+  getLatest: svc.lists.getLatest,
+  getNewest: svc.lists.getNewest,
+  getCompleted: svc.lists.getCompleted,
+  getPopularNow: svc.popularNow.getPopularNow,
+  getHomePage: svc.home.getHomePage,
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
-});
-
-// Start server
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}
-
-module.exports = app; // Export for Vercel 
+  version: require('./package.json').version,
+};
