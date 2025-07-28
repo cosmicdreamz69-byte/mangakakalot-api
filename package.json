@@ -34,12 +34,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/mangakakalot-api.git"
+    "url": "git+https://github.com/shafat-96/mangakakalot-api.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/mangakakalot-api/issues"
+    "url": "https://github.com/shafat-96/mangakakalot-api/issues"
   },
-  "homepage": "https://github.com/yourusername/mangakakalot-api#readme",
+  "homepage": "https://github.com/shafat-96/mangakakalot-api#readme",
   "dependencies": {
     "axios": "^1.6.2",
     "cheerio": "^1.0.0-rc.12",
