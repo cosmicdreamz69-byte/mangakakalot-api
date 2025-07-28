@@ -1,13 +1,12 @@
 {
   "name": "mangakakalot-api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Lightweight scraper library for MangaKakalot.gg (no server)",
   "main": "index.js",
   "types": "index.d.ts",
   "engines": {
     "node": ">=14.0.0"
   },
-
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
